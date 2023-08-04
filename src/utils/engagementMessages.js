@@ -23,35 +23,75 @@ engagementHelper.engagementMessageOverTimeChartOptions = (messageCountList, chan
                 .map((item) => [Date.parse(item.timeBucket), parseInt(item.count)]),
         };
     });
-    console.log(seriesData);
 
     // Step 3: Create the Highcharts options object.
     const options = {
+        chart: {
+            backgroundColor: "black", //set the background color of chart
+        },
         title: {
             text: "Engagement Messages Over Time",
+            style: {
+                color: "white" //set the title color
+            }
         },
         xAxis: {
             type: "datetime",
             title: {
                 text: "Date",
+                style: {
+                    color: "gray" //set the title color
+                }
+
             },
+            labels: {
+                style: {
+                    color: "gray" //set the title color
+                },
+            },
+            tickInterval: 24 * 3600 * 1000,
+
             crosshair: true,
         },
         yAxis: {
             title: {
                 text: "Message Count",
+                style: {
+                    color: "gray" //set the title color
+                }
             },
+            labels: {
+                style: {
+                    color: "gray" //set the title color
+                }
+            },
+            gridLineWidth: 0
         },
         tooltip: {
             formatter: function () {
-                return `<b>${this.series.name}</b><br/>Date: ${Highcharts.dateFormat(
-                    "%Y-%m-%d",
+                return `<b>${this.series.name}</b><br/> ${this.y} Messages on ${Highcharts.dateFormat(
+                    "%e %b",
                     this.x
-                )}<br/>Messages: ${this.y}`;
+                )}`
+            },
+
+            borderWidth: 2,
+            borderColor: "#00FFEF",
+        },
+        plotOptions: {
+            series: {
+                marker: {
+                    enabled: true, // Show markers at data points
+                },
+                color: "#00FFEF"
+            },
+            spline: {
+                marker: {
+                    enabled: false, // Disable markers for spline series
+                },
             },
         },
-
-        series: seriesData
+        series: seriesData.map((data) => ({ ...data, type: "spline" })),
     };
 
     return options;
